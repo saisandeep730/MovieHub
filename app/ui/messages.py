@@ -64,3 +64,88 @@ def about(bot_name: str) -> str:
 
 def error_screen() -> str:
     return f"{Icons.ERROR} Something went wrong. Please try again."
+
+
+def admin_dashboard(bot_name: str, user_mention: str) -> str:
+    return (
+        f"{Icons.ADMIN} <b>Admin Dashboard</b>\n\n"
+        f"Welcome, {user_mention}.\n"
+        f"<b>{bot_name}</b> management panel.\n\n"
+        f"Select an option below."
+    )
+
+
+def admin_upload_placeholder() -> str:
+    return (
+        f"{Icons.UPLOAD} <b>Upload Movie</b>\n\n"
+        f"Upload a new movie to the library.\n\n"
+        f"This feature will be available soon."
+    )
+
+
+def admin_manage_placeholder() -> str:
+    return (
+        f"{Icons.MANAGE} <b>Manage Movies</b>\n\n"
+        f"Edit, delete, or update existing movies.\n\n"
+        f"This feature will be available soon."
+    )
+
+
+def admin_requests_placeholder() -> str:
+    return (
+        f"{Icons.REQUEST} <b>Movie Requests</b>\n\n"
+        f"View and manage movie requests from users.\n\n"
+        f"This feature will be available soon."
+    )
+
+
+def admin_broadcast_placeholder() -> str:
+    return (
+        f"{Icons.BROADCAST} <b>Broadcast</b>\n\n"
+        f"Send messages to all bot users.\n\n"
+        f"This feature will be available soon."
+    )
+
+
+def admin_users_placeholder() -> str:
+    return (
+        f"{Icons.USERS} <b>Users</b>\n\n"
+        f"View and manage bot users.\n\n"
+        f"This feature will be available soon."
+    )
+
+
+def admin_stats_placeholder() -> str:
+    return (
+        f"{Icons.STATS} <b>Statistics</b>\n\n"
+        f"View bot usage statistics.\n\n"
+        f"This feature will be available soon."
+    )
+
+
+def admin_settings_placeholder() -> str:
+    return (
+        f"{Icons.SETTINGS} <b>Settings</b>\n\n"
+        f"Configure bot settings.\n\n"
+        f"This feature will be available soon."
+    )
+
+
+def admin_backup_placeholder() -> str:
+    return (
+        f"{Icons.BACKUP} <b>Backup</b>\n\n"
+        f"Backup and restore bot data.\n\n"
+        f"This feature will be available soon."
+    )
+
+
+def admin_health_placeholder() -> str:
+    return (
+        f"{Icons.HEALTH} <b>Health Dashboard</b>\n\n"
+        f"View system health status.\n\n"
+        f"This feature will be available soon."
+    )
+
+
+def unauthorized_access() -> str:
+    return f"{Icons.ERROR} You are not authorized to access this page."

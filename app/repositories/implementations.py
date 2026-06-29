@@ -126,6 +126,10 @@ class AdminRepository(BaseRepository):
     async def is_admin(self, user_id: int) -> bool:
         return await self.exists({"user_id": user_id, "is_active": True})
 
+    async def is_super_admin(self, user_id: int) -> bool:
+        doc = await self.find_one({"user_id": user_id, "is_active": True})
+        return doc is not None and doc.get("role") in ("superadmin",)
+
 
 class BroadcastRepository(BaseRepository):
     def __init__(self) -> None:

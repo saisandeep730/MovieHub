@@ -1,5 +1,6 @@
 from logging import getLogger
 
+from app.config import settings
 from app.repositories import AdminRepositoryProtocol
 
 logger = getLogger(__name__)
@@ -12,7 +13,14 @@ class AdminService:
         self._admin_repo = admin_repo
 
     async def is_admin(self, user_id: int) -> bool:
+        if user_id in settings.admin_ids:
+            return True
         return await self._admin_repo.is_admin(user_id)
+
+    async def is_super_admin(self, user_id: int) -> bool:
+        if user_id in settings.admin_ids:
+            return True
+        return await self._admin_repo.is_super_admin(user_id)
 
     async def add_admin(self, user_id: int, username: str, added_by: int, is_superadmin: bool = False) -> dict:
         doc = {

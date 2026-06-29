@@ -18,6 +18,22 @@ def home_keyboard() -> InlineKeyboardMarkup:
     )
 
 
+def admin_dashboard_keyboard() -> InlineKeyboardMarkup:
+    return (
+        KeyboardBuilder()
+        .button(f"{Icons.UPLOAD} Upload Movie", CallbackAction.ADMIN_UPLOAD)
+        .button(f"{Icons.MANAGE} Manage Movies", CallbackAction.ADMIN_MANAGE)
+        .button(f"{Icons.REQUEST} Movie Requests", CallbackAction.ADMIN_REQUESTS)
+        .button(f"{Icons.BROADCAST} Broadcast", CallbackAction.ADMIN_BROADCAST)
+        .button(f"{Icons.USERS} Users", CallbackAction.ADMIN_USERS)
+        .button(f"{Icons.STATS} Statistics", CallbackAction.ADMIN_STATS)
+        .button(f"{Icons.SETTINGS} Settings", CallbackAction.ADMIN_SETTINGS)
+        .button(f"{Icons.BACKUP} Backup", CallbackAction.ADMIN_BACKUP)
+        .button(f"{Icons.HEALTH} Health Dashboard", CallbackAction.ADMIN_HEALTH)
+        .build()
+    )
+
+
 def back_keyboard(action: CallbackAction = CallbackAction.HOME) -> InlineKeyboardMarkup:
     return (
         KeyboardBuilder()

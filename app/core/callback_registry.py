@@ -28,7 +28,7 @@ class CallbackAction(str, Enum):
     ADMIN_UPLOAD = "au"
     ADMIN_MANAGE = "am"
     ADMIN_REQUESTS = "ar"
-    ADMIN_BROADCAST = "ab"
+    ADMIN_BROADCAST = "br"
     ADMIN_USERS = "aus"
     ADMIN_STATS = "as"
     ADMIN_SETTINGS = "ad"
