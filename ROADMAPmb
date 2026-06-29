@@ -1,0 +1,439 @@
+# MovieHub Development Roadmap
+
+## Project Goal
+
+Build a production-ready Telegram Movie Storage & Distribution Bot using Python, Pyrogram, MongoDB Atlas, FastAPI, and Telegram Database Channels.
+
+The project will be developed incrementally. Every milestone must result in a working, testable application.
+
+---
+
+# Phase 1 — Foundation
+
+## Milestone 1
+
+### Project Bootstrap
+
+**Goals**
+
+* Create production folder structure
+* Configure logging
+* Configure environment variables
+* Create configuration loader
+* Create application entry point
+* Verify startup
+
+**Deliverable**
+Bot starts successfully.
+
+---
+
+## Milestone 2
+
+### Database Layer
+
+**Goals**
+
+* MongoDB connection
+* Database manager
+* Repository pattern
+* Base models
+* Database indexes
+
+**Deliverable**
+Database connection established.
+
+---
+
+## Milestone 3
+
+### Configuration Engine
+
+**Goals**
+
+* Load settings from MongoDB
+* Default configuration
+* Live configuration updates
+* Configuration cache
+
+**Deliverable**
+Bot settings editable without restart.
+
+---
+
+# Phase 2 — Core Bot
+
+## Milestone 4
+
+### Bot Framework
+
+**Goals**
+
+* Pyrogram initialization
+* Handler registration
+* Router structure
+* Error handling
+* Middleware
+
+**Deliverable**
+Bot responds to Telegram.
+
+---
+
+## Milestone 5
+
+### Home UI
+
+**Goals**
+
+* Welcome message
+* Home menu
+* Inline keyboards
+* Navigation
+
+**Deliverable**
+Modern home interface.
+
+---
+
+## Milestone 6
+
+### Admin Authentication
+
+**Goals**
+
+* Admin detection
+* Admin menu
+* Permissions
+* Session management
+
+**Deliverable**
+Admin panel opens securely.
+
+---
+
+# Phase 3 — Upload System
+
+## Milestone 7
+
+### Upload Wizard
+
+**Goals**
+
+* Movie name
+* Year
+* Poster
+* File collection
+* Preview
+
+**Deliverable**
+Complete upload flow.
+
+---
+
+## Milestone 8
+
+### Multi-file Support
+
+**Goals**
+
+* Unlimited files
+* File metadata
+* Telegram File IDs
+* File grouping
+
+**Deliverable**
+Movies support multiple qualities.
+
+---
+
+## Milestone 9
+
+### Duplicate Detection
+
+**Goals**
+
+* Detect existing movies
+* Replace
+* Merge
+* Cancel
+* Create anyway
+
+**Deliverable**
+Duplicate uploads handled safely.
+
+---
+
+## Milestone 10
+
+### Draft / Public
+
+**Goals**
+
+* Movie status
+* Publishing
+* Visibility
+* State changes
+
+**Deliverable**
+Movies can be drafts or public.
+
+---
+
+# Phase 4 — User Features
+
+## Milestone 11
+
+### Movie Search
+
+**Goals**
+
+* Partial search
+* Search results
+* Pagination
+* Empty state
+
+**Deliverable**
+Users can search movies.
+
+---
+
+## Milestone 12
+
+### Movie Details
+
+**Goals**
+
+* Poster
+* Metadata
+* File buttons
+* Navigation
+
+**Deliverable**
+Movie information displayed.
+
+---
+
+## Milestone 13
+
+### Download System
+
+**Goals**
+
+* Force Subscribe
+* Membership verification
+* File delivery
+* Warning message
+* Countdown
+* Auto delete
+
+**Deliverable**
+Complete download workflow.
+
+---
+
+## Milestone 14
+
+### Latest Movies
+
+**Goals**
+
+* Latest listing
+* Configurable limit
+* Pagination
+
+**Deliverable**
+Newest movies visible.
+
+---
+
+## Milestone 15
+
+### Movie Requests
+
+**Goals**
+
+* Request storage
+* Duplicate counting
+* Notifications
+
+**Deliverable**
+Request system operational.
+
+---
+
+# Phase 5 — Administration
+
+## Milestone 16
+
+### Movie Management
+
+**Goals**
+
+* Edit metadata
+* Replace poster
+* Manage files
+* Delete
+* Statistics
+
+**Deliverable**
+Movies fully manageable.
+
+---
+
+## Milestone 17
+
+### Broadcast System
+
+**Goals**
+
+* Broadcast messages
+* Progress tracking
+* Retry failures
+
+**Deliverable**
+Reliable broadcasts.
+
+---
+
+## Milestone 18
+
+### Settings Panel
+
+**Goals**
+
+* Dynamic configuration
+* Editable messages
+* Editable buttons
+* Channels
+* Timers
+
+**Deliverable**
+Everything configurable.
+
+---
+
+# Phase 6 — Automation
+
+## Milestone 19
+
+### Auto Post
+
+**Goals**
+
+* Auto publish
+* Updates channel
+* Configurable templates
+
+**Deliverable**
+Movies automatically posted.
+
+---
+
+## Milestone 20
+
+### Backup System
+
+**Goals**
+
+* Export
+* Import
+* Scheduled backups
+* Restore
+
+**Deliverable**
+Automated backups working.
+
+---
+
+# Phase 7 — Infrastructure
+
+## Milestone 21
+
+### Health Dashboard
+
+**Goals**
+
+* Bot health
+* MongoDB
+* Telegram
+* Device status
+* Uptime
+
+**Deliverable**
+Complete monitoring dashboard.
+
+---
+
+## Milestone 22
+
+### Redirect Server
+
+**Goals**
+
+* FastAPI server
+* Permanent Movie IDs
+* Redirect endpoint
+* Active bot support
+
+**Deliverable**
+Permanent MovieHub links functional.
+
+---
+
+# Phase 8 — Production
+
+## Milestone 23
+
+### Optimization
+
+**Goals**
+
+* Performance tuning
+* Memory optimization
+* Code cleanup
+* Remove dead code
+
+---
+
+## Milestone 24
+
+### Production Deployment
+
+**Goals**
+
+* Termux deployment
+* Startup scripts
+* Auto restart
+* Documentation
+
+---
+
+# Definition of Done
+
+A milestone is complete only when:
+
+* Feature implemented
+* Code reviewed
+* No known bugs
+* Tested manually
+* Logging added
+* Error handling added
+* Documentation updated
+* Ready for the next milestone
+
+---
+
+# Development Workflow
+
+For every milestone:
+
+1. Plan the implementation.
+2. Generate production-ready code.
+3. Explain changes.
+4. Run and test.
+5. Fix issues.
+6. Commit locally.
+7. Move to the next milestone.
+
+Never implement multiple milestones in a single AI prompt.

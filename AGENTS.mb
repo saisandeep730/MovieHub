@@ -1,0 +1,147 @@
+# MovieHub AI Development Guide (AGENTS.md)
+
+## Project Overview
+
+MovieHub is a production-ready Telegram Movie Storage & Distribution Bot built with Python.
+
+The bot stores movie files in Telegram Database Channels while storing all metadata in MongoDB Atlas.
+
+The bot is designed to run 24/7 on Android using Termux and must be lightweight, modular, maintainable, and fully configurable from inside Telegram without editing source code.
+
+The only values that may exist in `.env` are startup secrets such as Bot Token, MongoDB URI, and API credentials required to bootstrap the application.
+
+Everything else must be stored in MongoDB and editable from the Telegram Admin Panel.
+
+---
+
+## Tech Stack
+
+* Python 3.12+
+* Pyrogram
+* Motor (MongoDB)
+* MongoDB Atlas
+* FastAPI (Redirect Server)
+* Uvicorn
+* Pydantic
+* AsyncIO
+* Telegram Database Channels
+
+---
+
+## Core Principles
+
+* Async-first architecture.
+* Modular codebase.
+* Small focused modules.
+* No duplicate logic.
+* Clear separation of responsibilities.
+* Type hints throughout.
+* Comprehensive logging.
+* Proper exception handling.
+* Production-ready code only.
+
+---
+
+## Development Rules
+
+Always implement one feature at a time.
+
+Do not generate placeholder implementations.
+
+Do not hardcode configuration values.
+
+Avoid global state whenever possible.
+
+Prefer dependency injection and service classes.
+
+Each feature must be testable independently.
+
+Never rewrite unrelated files.
+
+When modifying existing code, preserve backward compatibility whenever possible.
+
+---
+
+## Project Structure
+
+The project should be organized into modules for:
+
+* Bot
+* Handlers
+* Keyboards
+* Database
+* Models
+* Services
+* Utilities
+* Configuration
+* Redirect Server
+* Tests
+* Scripts
+
+Keep responsibilities separated.
+
+---
+
+## Configuration
+
+All editable configuration must come from MongoDB.
+
+Examples include:
+
+* Bot Name
+* Welcome Message
+* About Message
+* Channels
+* Force Subscribe
+* Auto Delete Timer
+* Warning Messages
+* Button Text
+* Auto Post Template
+* Latest Movie Count
+
+The bot should not require restarting when configuration changes.
+
+---
+
+## User Interface
+
+The UI should be modern, clean, emoji-friendly, and easy to navigate using inline buttons.
+
+Avoid commands wherever possible.
+
+---
+
+## Admin Panel
+
+The Admin Panel should be completely button-based.
+
+Every workflow should guide the administrator step by step.
+
+---
+
+## Coding Style
+
+* Use descriptive names.
+* Prefer composition over inheritance.
+* Keep functions short.
+* Keep classes focused.
+* Avoid deeply nested code.
+* Write reusable utilities.
+
+---
+
+## AI Workflow
+
+Before implementing a feature:
+
+1. Understand the requirement.
+2. Explain the implementation plan briefly.
+3. Generate production-ready code.
+4. Explain what changed.
+5. Mention any manual testing steps.
+
+---
+
+## Goal
+
+The objective is to build a maintainable, scalable, production-quality Telegram application suitable for long-term development.
