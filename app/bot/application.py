@@ -8,7 +8,7 @@ from app.config import settings
 from app.core import plugin_manager
 from app.database import db_manager
 from app.events import BotStartedEvent, BotStoppedEvent, event_bus
-from app.handlers import callback_handlers, start_handlers
+from app.handlers import callback_handlers, start_handlers, upload_handlers
 from app.logging import setup_logging
 from app.tasks import task_manager
 
@@ -33,6 +33,8 @@ class BotApplication:
             self.client.add_handler(MessageHandler(handler_fn, handler_filter))
         for handler_fn, _ in callback_handlers:
             self.client.add_handler(CallbackQueryHandler(handler_fn))
+        for handler_fn, handler_filter in upload_handlers:
+            self.client.add_handler(MessageHandler(handler_fn, handler_filter))
 
     async def startup(self) -> None:
         """Initialize all dependencies and start the bot."""

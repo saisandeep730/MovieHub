@@ -149,3 +149,30 @@ def admin_health_placeholder() -> str:
 
 def unauthorized_access() -> str:
     return f"{Icons.ERROR} You are not authorized to access this page."
+
+
+def upload_title_prompt() -> str:
+    return (
+        f"{Icons.UPLOAD} <b>Upload New Movie</b>\n\n"
+        f"Please send the movie title.\n\n"
+        f"<b>Example:</b>\n"
+        f"Avengers: Endgame"
+    )
+
+
+def upload_title_success(title: str) -> str:
+    return (
+        f"{Icons.SUCCESS} <b>Movie title saved.</b>\n\n"
+        f"Now send the <b>release year</b>.\n\n"
+        f"<b>Example:</b>\n"
+        f"2019"
+    )
+
+
+def upload_title_invalid() -> str:
+    return (
+        f"{Icons.WARNING} <b>Invalid input.</b>\n\n"
+        f"Please send a text message with the movie title.\n\n"
+        f"<b>Example:</b>\n"
+        f"Avengers: Endgame"
+    )

@@ -42,6 +42,14 @@ def back_keyboard(action: CallbackAction = CallbackAction.HOME) -> InlineKeyboar
     )
 
 
+def cancel_keyboard() -> InlineKeyboardMarkup:
+    return (
+        KeyboardBuilder()
+        .button(f"{Icons.ERROR} Cancel", CallbackAction.CANCEL)
+        .build()
+    )
+
+
 def simple_keyboard(buttons: list[Button]) -> InlineKeyboardMarkup:
     kb = KeyboardBuilder()
     for btn in buttons:
