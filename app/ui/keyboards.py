@@ -50,6 +50,15 @@ def cancel_keyboard() -> InlineKeyboardMarkup:
     )
 
 
+def poster_keyboard() -> InlineKeyboardMarkup:
+    return (
+        KeyboardBuilder()
+        .button(f"{Icons.SKIP} Skip", CallbackAction.SKIP)
+        .button(f"{Icons.ERROR} Cancel", CallbackAction.CANCEL)
+        .build()
+    )
+
+
 def simple_keyboard(buttons: list[Button]) -> InlineKeyboardMarkup:
     kb = KeyboardBuilder()
     for btn in buttons:

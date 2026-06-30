@@ -34,6 +34,7 @@ class CallbackAction(str, Enum):
     ADMIN_SETTINGS = "ad"
     ADMIN_BACKUP = "ak"
     ADMIN_HEALTH = "ahc"
+    SKIP = "sk"
 
 
 def encode(action: CallbackAction, *args: str | int) -> str:

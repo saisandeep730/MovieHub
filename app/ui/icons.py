@@ -28,3 +28,5 @@ class Icons:
     BACKUP = "\U0001F4BE"
     HEALTH = "\u2764\uFE0F"
     DASHBOARD = "\U0001F4CA"
+    FOLDER = "\U0001F4C1"
+    SKIP = "\u23ED\uFE0F"

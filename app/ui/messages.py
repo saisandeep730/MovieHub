@@ -176,3 +176,41 @@ def upload_title_invalid() -> str:
         f"<b>Example:</b>\n"
         f"Avengers: Endgame"
     )
+
+
+def upload_year_success() -> str:
+    return (
+        f"{Icons.SUCCESS} <b>Release year saved.</b>\n\n"
+        f"{Icons.MOVIE} Please send the movie poster.\n\n"
+        f"If you don\u2019t have a poster, press Skip."
+    )
+
+
+def upload_year_invalid() -> str:
+    return (
+        f"{Icons.WARNING} <b>Invalid release year.</b>\n\n"
+        f"Please send a valid year between <b>1888</b> and <b>{_current_year() + 2}</b>.\n\n"
+        f"<b>Example:</b>\n"
+        f"2023"
+    )
+
+
+def upload_poster_prompt(title: str) -> str:
+    return (
+        f"{Icons.UPLOAD} <b>Upload Poster</b>\n\n"
+        f"<b>Movie:</b> {title}\n\n"
+        f"Send a photo to use as the movie poster.\n\n"
+        f"Or press Skip to continue without a poster."
+    )
+
+
+def upload_files_prompt() -> str:
+    return (
+        f"{Icons.FOLDER} Now forward all movie files together.\n\n"
+        f"You can forward one or multiple files in a single step."
+    )
+
+
+def _current_year() -> int:
+    from datetime import UTC, datetime
+    return datetime.now(UTC).year
