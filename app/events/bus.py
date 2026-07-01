@@ -25,6 +25,14 @@ class MovieUploadedEvent(Event):
 
 
 @dataclass
+class DraftSavedEvent(Event):
+    movie_id: str
+    title: str
+    year: int
+    created_by: int
+
+
+@dataclass
 class MovieDownloadedEvent(Event):
     movie_id: str
     user_id: int

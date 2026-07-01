@@ -5,6 +5,7 @@ from app.repositories import (
     AdminRepository,
     BackupRepository,
     BroadcastRepository,
+    CountersRepository,
     HealthRepository,
     MovieFileRepository,
     MovieRepository,
@@ -25,6 +26,7 @@ from app.services import (
     RequestService,
     SearchService,
     SettingsService,
+    StatisticsService,
     UploadService,
     UserService,
 )
@@ -50,6 +52,7 @@ class Container:
         self._backup_repo: BackupRepository | None = None
         self._health_repo: HealthRepository | None = None
         self._session_repo: SessionRepository | None = None
+        self._counters_repo: CountersRepository | None = None
 
         # Services
         self._config_service: ConfigService | None = None
@@ -65,6 +68,7 @@ class Container:
         self._user_service: UserService | None = None
         self._admin_service: AdminService | None = None
         self._notification_service: NotificationService | None = None
+        self._statistics_service: StatisticsService | None = None
 
     @property
     def movie_repo(self) -> MovieRepository:
@@ -127,6 +131,18 @@ class Container:
         return self._session_repo
 
     @property
+    def counters_repo(self) -> CountersRepository:
+        if self._counters_repo is None:
+            self._counters_repo = CountersRepository()
+        return self._counters_repo
+
+    @property
+    def statistics_service(self) -> StatisticsService:
+        if self._statistics_service is None:
+            self._statistics_service = StatisticsService()
+        return self._statistics_service
+
+    @property
     def config_service(self) -> ConfigService:
         if self._config_service is None:
             self._config_service = ConfigService(settings_repo=self.settings_repo)
@@ -147,6 +163,8 @@ class Container:
             self._upload_service = UploadService(
                 movie_repo=self.movie_repo,
                 movie_file_repo=self.movie_file_repo,
+                counters_repo=self.counters_repo,
+                statistics_service=self.statistics_service,
             )
         return self._upload_service
 

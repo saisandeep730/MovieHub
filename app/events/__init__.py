@@ -9,6 +9,7 @@ from app.events.bus import (
     MovieRequestedEvent,
     MovieUploadedEvent,
     event_bus,
+    DraftSavedEvent,
 )
 
 __all__ = [
@@ -22,4 +23,5 @@ __all__ = [
     "BackupCompletedEvent",
     "BotStartedEvent",
     "BotStoppedEvent",
+    "DraftSavedEvent",
 ]

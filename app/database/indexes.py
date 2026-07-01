@@ -63,6 +63,10 @@ class IndexDefinitions:
         IndexModel([("expires_at", ASCENDING)], expireAfterSeconds=0),
     ]
 
+    COUNTERS = [
+        IndexModel([("_id", ASCENDING)]),
+    ]
+
     @classmethod
     def all_indexes(cls) -> dict[str, list[IndexModel]]:
         return {
@@ -77,4 +81,5 @@ class IndexDefinitions:
             collections.BACKUPS: cls.BACKUPS,
             collections.HEALTH: cls.HEALTH,
             collections.SESSIONS: cls.SESSIONS,
+            collections.COUNTERS: cls.COUNTERS,
         }

@@ -218,6 +218,25 @@ def upload_poster_invalid() -> str:
     )
 
 
+def no_drafts_message() -> str:
+    return f"{Icons.INFO} <b>No Drafts Found</b>\n\nThere are no saved drafts."
+
+
+def draft_detail_message(movie: dict) -> str:
+    mid = movie.get("movie_id", "N/A")
+    title = movie.get("title", "Unknown")
+    year = movie.get("year", "N/A")
+    status = movie.get("status", "unknown")
+    return (
+        f"{Icons.FILE} <b>Draft Details</b>\n\n"
+        f"Movie ID: <code>{mid}</code>\n"
+        f"Title: {title}\n"
+        f"Year: {year}\n"
+        f"Status: {status}\n\n"
+        f"What would you like to do?"
+    )
+
+
 def upload_files_prompt() -> str:
     return (
         f"{Icons.FOLDER} Now forward all movie files together.\n\n"

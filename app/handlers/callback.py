@@ -38,6 +38,11 @@ _STEP_ACTIONS = frozenset({
     CallbackAction.BACK_TO_PREVIEW,
 })
 
+_DUPLICATE_ACTIONS = frozenset({
+    CallbackAction.DUPLICATE_MERGE,
+    CallbackAction.DUPLICATE_REPLACE,
+})
+
 _USER_ACTIONS = frozenset({
     CallbackAction.SEARCH,
     CallbackAction.LATEST,
@@ -124,6 +129,28 @@ async def handle_callback(client: object, callback_query: object) -> None:
                 await wizard.handle_cancel(client, callback_query)
             else:
                 await callback_query.answer()
+        elif action in _DUPLICATE_ACTIONS:
+            user_id = callback_query.from_user.id
+            wizard = wizard_manager.get_active(user_id)
+            if not wizard:
+                await callback_query.answer("Session expired")
+            elif action == CallbackAction.DUPLICATE_MERGE:
+                await wizard.handle_duplicate_merge(client, callback_query)
+            elif action == CallbackAction.DUPLICATE_REPLACE:
+                await wizard.handle_duplicate_replace(client, callback_query)
+        elif action == CallbackAction.ADMIN_MANAGE_DRAFTS:
+            from app.handlers.admin import show_drafts_list
+            await show_drafts_list(client, callback_query)
+        elif action == CallbackAction.PUBLISH_DRAFT:
+            from app.handlers.admin import handle_publish_draft
+            await handle_publish_draft(client, callback_query, args[0] if args else "")
+        elif action == CallbackAction.DELETE_DRAFT:
+            from app.handlers.admin import handle_delete_draft
+            await handle_delete_draft(client, callback_query, args[0] if args else "")
+        elif action == CallbackAction.VIEW_MOVIE:
+            from app.handlers.admin import show_draft_detail
+            movie_id = args[0] if args else ""
+            await show_draft_detail(client, callback_query, movie_id)
         else:
             await callback_query.answer("Coming soon")
     except MessageNotModified:

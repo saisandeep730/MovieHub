@@ -5,6 +5,7 @@ from typing import Any
 
 from pyrogram.types import CallbackQuery, Message
 
+from app.core import CallbackAction
 from app.states import state_manager
 from app.wizard.core import WizardContext, WizardStep
 from app.wizard.message import delete_message_safe, edit_or_send
@@ -194,13 +195,61 @@ class WizardSession:
             return "At least one file is required."
         return None
 
+    async def _show_success(
+        self,
+        callback: CallbackQuery,
+        status: str,
+        movie: dict,
+    ) -> None:
+        from app.core.container import container
+        from app.ui.keyboards import admin_dashboard_keyboard
+
+        movie_id = movie.get("movie_id", "N/A")
+        bot_name = await container.config_service.get_bot_name()
+        mention = callback.from_user.mention
+        merged = movie.get("_merged_files", 0)
+        skipped = movie.get("_skipped_files", 0)
+        extra = ""
+        if merged:
+            extra = f"\n\n{merged} new files added, {skipped} duplicates skipped."
+        success_text = (
+            f"\u2705 <b>Movie {status.title()}ed!</b>{extra}\n\n"
+            f"Movie ID: <code>{movie_id}</code>"
+        )
+        await callback.edit_message_text(
+            success_text,
+            reply_markup=admin_dashboard_keyboard(bot_name, mention),
+        )
+
+    async def _show_duplicate_dialog(
+        self,
+        callback: CallbackQuery,
+        dup: dict,
+    ) -> None:
+        from app.ui.keyboards import duplicate_dialog_keyboard
+
+        ctx = self.context
+        text = (
+            f"\u26A0\uFE0F <b>Duplicate Detected</b>\n\n"
+            f"A movie with the title <b>{ctx.title}</b> "
+            f"and year <b>{ctx.year}</b> already exists.\n\n"
+            f"<b>Existing:</b> <code>{dup.get('movie_id', 'N/A')}</code>\n"
+            f"How would you like to proceed?"
+        )
+        await callback.edit_message_text(
+            text,
+            reply_markup=duplicate_dialog_keyboard(),
+        )
+
     async def _save_and_cleanup(
         self,
         client: object,
         callback: CallbackQuery,
         status: str,
     ) -> bool:
+        from app.core.container import container
         from app.wizard.upload import UploadContext, _truncate_name
+
         ctx = self.context
         if not isinstance(ctx, UploadContext):
             await callback.answer("Invalid context")
@@ -212,8 +261,6 @@ class WizardSession:
             await callback.answer()
             return False
 
-        from app.core.container import container
-
         try:
             if status == "draft":
                 movie = await container.upload_service.save_draft(
@@ -223,66 +270,96 @@ class WizardSession:
                     files=ctx.files,
                     created_by=self.user_id,
                 )
-            else:
-                is_dup = await container.upload_service.duplicate_check(ctx.title, ctx.year)
-                if is_dup:
-                    from app.ui.keyboards import admin_dashboard_keyboard
-                    from app.ui.messages import admin_dashboard
-                    dup_text = (
-                        f"\u26A0\uFE0F <b>Duplicate detected!</b>\n\n"
-                        f"A movie with the title <b>{ctx.title}</b> "
-                        f"and year <b>{ctx.year}</b> already exists.\n\n"
-                        f"Use Manage Movies to replace or merge."
-                    )
-                    await callback.edit_message_text(
-                        dup_text,
-                        reply_markup=admin_dashboard_keyboard(),
-                    )
-                    self._cleanup()
-                    await callback.answer()
-                    return True
+                self._cleanup()
+                await self._show_success(callback, "draft", movie)
+                await callback.answer()
+                logger.info("Draft saved: %s by user %d", ctx.title, self.user_id)
+                return True
 
-                movie = await container.upload_service.publish_movie(
-                    title=ctx.title,
-                    year=ctx.year,
-                    poster_file_id=ctx.poster_file_id,
-                    files=ctx.files,
-                    created_by=self.user_id,
-                )
+            dup = await container.upload_service.find_duplicate(ctx.title, ctx.year)
+            if dup:
+                ctx._duplicate_movie = dup
+                await self._show_duplicate_dialog(callback, dup)
+                await callback.answer()
+                return True
 
+            movie = await container.upload_service.publish_movie(
+                title=ctx.title,
+                year=ctx.year,
+                poster_file_id=ctx.poster_file_id,
+                files=ctx.files,
+                created_by=self.user_id,
+            )
             self._cleanup()
-
-            from app.ui.keyboards import admin_dashboard_keyboard
-            from app.ui.messages import admin_dashboard
-
-            movie_id = movie.get("movie_id", "N/A")
-            bot_name = await container.config_service.get_bot_name()
-            mention = callback.from_user.mention
-            success_text = (
-                f"\u2705 <b>Movie {status.title()}ed!</b>\n\n"
-                f"{admin_dashboard(bot_name, mention)}\n\n"
-                f"Movie ID: <code>{movie_id}</code>"
-            )
-            await callback.edit_message_text(
-                success_text,
-                reply_markup=admin_dashboard_keyboard(),
-            )
+            await self._show_success(callback, "publish", movie)
             await callback.answer()
-            logger.info(
-                "Movie %s (%s) saved as %s by user %d",
-                ctx.title, movie_id, status, self.user_id,
-            )
+            logger.info("Movie published: %s (%s) by user %d", ctx.title, movie.get("movie_id"), self.user_id)
             return True
 
         except Exception:
-            logger.exception(
-                "Failed to save movie %s as %s", ctx.title, status,
-            )
+            logger.exception("Failed to save movie %s as %s", ctx.title, status)
             await self.render_current(
                 client, error="\u274C An error occurred while saving. Please try again.",
             )
             await callback.answer()
             return False
+
+    async def handle_duplicate_merge(self, client: object, callback: CallbackQuery) -> None:
+        from app.core.container import container
+        from app.wizard.upload import UploadContext
+
+        ctx = self.context
+        if not isinstance(ctx, UploadContext):
+            await callback.answer("Invalid context")
+            return
+
+        dup = getattr(ctx, "_duplicate_movie", None)
+        if not dup:
+            await callback.answer("No duplicate data found")
+            return
+
+        try:
+            movie = await container.upload_service.merge_movie(
+                existing_movie=dup,
+                new_files=ctx.files,
+                updated_by=self.user_id,
+            )
+            self._cleanup()
+            await self._show_success(callback, "merge", movie)
+            await callback.answer()
+        except Exception:
+            logger.exception("Failed to merge movie")
+            await callback.answer("\u274C Merge failed. Please try again.")
+
+    async def handle_duplicate_replace(self, client: object, callback: CallbackQuery) -> None:
+        from app.core.container import container
+        from app.wizard.upload import UploadContext
+
+        ctx = self.context
+        if not isinstance(ctx, UploadContext):
+            await callback.answer("Invalid context")
+            return
+
+        dup = getattr(ctx, "_duplicate_movie", None)
+        if not dup:
+            await callback.answer("No duplicate data found")
+            return
+
+        try:
+            movie = await container.upload_service.replace_movie(
+                existing_movie=dup,
+                new_title=ctx.title,
+                new_year=ctx.year,
+                new_poster_file_id=ctx.poster_file_id,
+                new_files=ctx.files,
+                updated_by=self.user_id,
+            )
+            self._cleanup()
+            await self._show_success(callback, "replace", movie)
+            await callback.answer()
+        except Exception:
+            logger.exception("Failed to replace movie")
+            await callback.answer("\u274C Replace failed. Please try again.")
 
     async def handle_save_draft(self, client: object, callback: CallbackQuery) -> None:
         await self._save_and_cleanup(client, callback, "draft")

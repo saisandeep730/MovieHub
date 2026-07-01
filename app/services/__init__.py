@@ -11,6 +11,7 @@ from app.services.health_service import HealthService
 from app.services.user_service import UserService
 from app.services.admin_service import AdminService
 from app.services.notification_service import NotificationService
+from app.services.statistics_service import StatisticsService
 
 __all__ = [
     "ConfigService",
@@ -26,4 +27,5 @@ __all__ = [
     "UserService",
     "AdminService",
     "NotificationService",
+    "StatisticsService",
 ]

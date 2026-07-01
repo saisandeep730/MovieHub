@@ -175,3 +175,23 @@ class SessionRepository(BaseRepository):
     async def cleanup_expired(self) -> int:
         result = await self.collection.delete_many({"expires_at": {"$lt": datetime.now(timezone.utc)}})
         return result.deleted_count
+
+
+class CountersRepository(BaseRepository):
+    def __init__(self) -> None:
+        super().__init__(db_manager, collections.COUNTERS)
+
+    async def get_next_sequence(self, name: str = "movie_id") -> int:
+        result = await self.find_one_and_update(
+            {"_id": name},
+            {"$inc": {"seq": 1}},
+            return_document=True,
+        )
+        if result is None:
+            await self.insert_one({"_id": name, "seq": 1})
+            return 1
+        return result["seq"]
+
+    async def get_current(self, name: str = "movie_id") -> int | None:
+        doc = await self.find_one({"_id": name})
+        return doc["seq"] if doc else None

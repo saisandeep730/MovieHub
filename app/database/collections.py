@@ -12,6 +12,7 @@ class Collections:
     BACKUPS = "backups"
     HEALTH = "health"
     SESSIONS = "sessions"
+    COUNTERS = "counters"
 
 
 collections = Collections()

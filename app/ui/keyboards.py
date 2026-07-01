@@ -24,7 +24,7 @@ def home_keyboard() -> InlineKeyboardMarkup:
     )
 
 
-def admin_dashboard_keyboard() -> InlineKeyboardMarkup:
+def admin_dashboard_keyboard(bot_name: str | None = None, mention: str | None = None) -> InlineKeyboardMarkup:
     return (
         KeyboardBuilder()
         .row(
@@ -108,6 +108,52 @@ def quality_keyboard() -> InlineKeyboardMarkup:
             Button.action("8K", CallbackAction.QUALITY_SELECT, "8K"),
             Button.action(f"{Icons.INFO} Custom", CallbackAction.CUSTOM_INPUT, "quality"),
         )
+        .build()
+    )
+
+
+def duplicate_dialog_keyboard() -> InlineKeyboardMarkup:
+    return (
+        KeyboardBuilder()
+        .row(
+            Button.action(f"{Icons.FOLDER} Merge Files", CallbackAction.DUPLICATE_MERGE),
+            Button.action(f"{Icons.EDIT} Replace Movie", CallbackAction.DUPLICATE_REPLACE),
+        )
+        .row(
+            Button.action(f"{Icons.INFO} View Existing", CallbackAction.VIEW_MOVIE),
+            Button.action(f"{Icons.ERROR} Cancel", CallbackAction.CANCEL),
+        )
+        .build()
+    )
+
+
+def drafts_list_keyboard(drafts: list[dict], page: int = 0, total_pages: int = 1) -> InlineKeyboardMarkup:
+    kb = KeyboardBuilder()
+    for d in drafts:
+        title = d.get("title", "Unknown")
+        mid = d.get("movie_id", "N/A")
+        label = f"{title[:25]}... ({mid})" if len(title) > 25 else f"{title} ({mid})"
+        kb.button(label, CallbackAction.VIEW_MOVIE, mid)
+    if total_pages > 1:
+        nav_row = []
+        if page > 0:
+            nav_row.append(Button.action(f"{Icons.PREV} Prev", CallbackAction.PAGE_PREV, "drafts", str(page - 1)))
+        if page < total_pages - 1:
+            nav_row.append(Button.action(f"{Icons.NEXT} Next", CallbackAction.PAGE_NEXT, "drafts", str(page + 1)))
+        if nav_row:
+            kb.row(*nav_row)
+    kb.button(f"{Icons.HOME} Admin Home", CallbackAction.ADMIN_HOME)
+    return kb.build()
+
+
+def draft_actions_keyboard(movie_id: str) -> InlineKeyboardMarkup:
+    return (
+        KeyboardBuilder()
+        .row(
+            Button.action(f"{Icons.PUBLISH} Publish", CallbackAction.PUBLISH_DRAFT, movie_id),
+            Button.action(f"{Icons.ERROR} Delete", CallbackAction.DELETE_DRAFT, movie_id),
+        )
+        .button(f"{Icons.BACK} Back to Drafts", CallbackAction.ADMIN_MANAGE_DRAFTS)
         .build()
     )
 

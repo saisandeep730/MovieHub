@@ -52,6 +52,12 @@ class CallbackAction(str, Enum):
     MANAGE_FILES = "mf"
     FILE_REMOVE = "fr"
     BACK_TO_PREVIEW = "bp"
+    DUPLICATE_MERGE = "dpm"
+    DUPLICATE_REPLACE = "dpr"
+    VIEW_MOVIE = "vm"
+    PUBLISH_DRAFT = "pd"
+    DELETE_DRAFT = "dd"
+    ADMIN_MANAGE_DRAFTS = "amd"
 
 
 def encode(action: CallbackAction, *args: str | int) -> str:

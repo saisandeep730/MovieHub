@@ -1,5 +1,5 @@
 from app.ui.icons import Icons
-from app.ui.keyboards import admin_dashboard_keyboard, back_keyboard, cancel_keyboard, home_keyboard, poster_keyboard, simple_keyboard
+from app.ui.keyboards import admin_dashboard_keyboard, back_keyboard, cancel_keyboard, draft_actions_keyboard, drafts_list_keyboard, duplicate_dialog_keyboard, home_keyboard, poster_keyboard, simple_keyboard
 from app.ui.messages import (
     about,
     admin_backup_placeholder,
@@ -13,8 +13,10 @@ from app.ui.messages import (
     admin_upload_placeholder,
     admin_users_placeholder,
     contact_placeholder,
+    draft_detail_message,
     error_screen,
     latest_placeholder,
+    no_drafts_message,
     request_placeholder,
     search_placeholder,
     unauthorized_access,
@@ -47,6 +49,9 @@ __all__ = [
     "cancel_keyboard",
     "poster_keyboard",
     "simple_keyboard",
+    "duplicate_dialog_keyboard",
+    "drafts_list_keyboard",
+    "draft_actions_keyboard",
     "welcome",
     "search_placeholder",
     "latest_placeholder",
@@ -64,6 +69,8 @@ __all__ = [
     "admin_settings_placeholder",
     "admin_backup_placeholder",
     "admin_health_placeholder",
+    "no_drafts_message",
+    "draft_detail_message",
     "upload_files_prompt",
     "upload_poster_invalid",
     "upload_poster_prompt",
