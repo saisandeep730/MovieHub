@@ -181,16 +181,117 @@ class WizardSession:
         await callback.answer("Edit coming soon")
         logger.debug("Edit requested for wizard %s by user %d", self.wizard_name, self.user_id)
 
+    async def _validate_before_save(self) -> str | None:
+        from app.wizard.upload import UploadContext
+        ctx = self.context
+        if not isinstance(ctx, UploadContext):
+            return "Invalid wizard context"
+        if not ctx.title:
+            return "Movie title is required."
+        if not ctx.year:
+            return "Release year is required."
+        if not ctx.files:
+            return "At least one file is required."
+        return None
+
+    async def _save_and_cleanup(
+        self,
+        client: object,
+        callback: CallbackQuery,
+        status: str,
+    ) -> bool:
+        from app.wizard.upload import UploadContext, _truncate_name
+        ctx = self.context
+        if not isinstance(ctx, UploadContext):
+            await callback.answer("Invalid context")
+            return False
+
+        err = await self._validate_before_save()
+        if err:
+            await self.render_current(client, error=err)
+            await callback.answer()
+            return False
+
+        from app.core.container import container
+
+        try:
+            if status == "draft":
+                movie = await container.upload_service.save_draft(
+                    title=ctx.title,
+                    year=ctx.year,
+                    poster_file_id=ctx.poster_file_id,
+                    files=ctx.files,
+                    created_by=self.user_id,
+                )
+            else:
+                is_dup = await container.upload_service.duplicate_check(ctx.title, ctx.year)
+                if is_dup:
+                    from app.ui.keyboards import admin_dashboard_keyboard
+                    from app.ui.messages import admin_dashboard
+                    dup_text = (
+                        f"\u26A0\uFE0F <b>Duplicate detected!</b>\n\n"
+                        f"A movie with the title <b>{ctx.title}</b> "
+                        f"and year <b>{ctx.year}</b> already exists.\n\n"
+                        f"Use Manage Movies to replace or merge."
+                    )
+                    await callback.edit_message_text(
+                        dup_text,
+                        reply_markup=admin_dashboard_keyboard(),
+                    )
+                    self._cleanup()
+                    await callback.answer()
+                    return True
+
+                movie = await container.upload_service.publish_movie(
+                    title=ctx.title,
+                    year=ctx.year,
+                    poster_file_id=ctx.poster_file_id,
+                    files=ctx.files,
+                    created_by=self.user_id,
+                )
+
+            self._cleanup()
+
+            from app.ui.keyboards import admin_dashboard_keyboard
+            from app.ui.messages import admin_dashboard
+
+            movie_id = movie.get("movie_id", "N/A")
+            bot_name = await container.config_service.get_bot_name()
+            mention = callback.from_user.mention
+            success_text = (
+                f"\u2705 <b>Movie {status.title()}ed!</b>\n\n"
+                f"{admin_dashboard(bot_name, mention)}\n\n"
+                f"Movie ID: <code>{movie_id}</code>"
+            )
+            await callback.edit_message_text(
+                success_text,
+                reply_markup=admin_dashboard_keyboard(),
+            )
+            await callback.answer()
+            logger.info(
+                "Movie %s (%s) saved as %s by user %d",
+                ctx.title, movie_id, status, self.user_id,
+            )
+            return True
+
+        except Exception:
+            logger.exception(
+                "Failed to save movie %s as %s", ctx.title, status,
+            )
+            await self.render_current(
+                client, error="\u274C An error occurred while saving. Please try again.",
+            )
+            await callback.answer()
+            return False
+
     async def handle_save_draft(self, client: object, callback: CallbackQuery) -> None:
-        await callback.answer("Save Draft coming soon")
-        logger.debug("Save Draft requested for wizard %s by user %d", self.wizard_name, self.user_id)
+        await self._save_and_cleanup(client, callback, "draft")
 
     async def handle_publish(self, client: object, callback: CallbackQuery) -> None:
-        await callback.answer("Publish coming soon")
-        logger.debug("Publish requested for wizard %s by user %d", self.wizard_name, self.user_id)
+        await self._save_and_cleanup(client, callback, "public")
 
     async def handle_cancel(self, client: object, callback: CallbackQuery) -> None:
-        state_manager.clear_state(self.user_id, self.chat_id)
+        self._cleanup()
         from app.ui.keyboards import admin_dashboard_keyboard
         from app.ui.messages import admin_dashboard
         from app.core.container import container
@@ -204,8 +305,13 @@ class WizardSession:
         await callback.answer()
         logger.info("Wizard %s cancelled by user %d", self.wizard_name, self.user_id)
 
-    async def _complete(self, client: object) -> None:
+    def _cleanup(self) -> None:
         state_manager.clear_state(self.user_id, self.chat_id)
+        from app.wizard import wizard_manager
+        wizard_manager.remove(self.user_id)
+
+    async def _complete(self, client: object) -> None:
+        self._cleanup()
         logger.info(
             "Wizard %s completed by user %d — context: %s",
             self.wizard_name,

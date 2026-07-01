@@ -45,6 +45,13 @@ class CallbackAction(str, Enum):
     LANGUAGE_SELECT = "ls"
     USE_ORIGINAL = "uo"
     CUSTOM_INPUT = "ci"
+    PREVIEW_EDIT = "pe"
+    EDIT_TITLE = "et"
+    EDIT_YEAR = "ey"
+    EDIT_POSTER = "ep"
+    MANAGE_FILES = "mf"
+    FILE_REMOVE = "fr"
+    BACK_TO_PREVIEW = "bp"
 
 
 def encode(action: CallbackAction, *args: str | int) -> str:

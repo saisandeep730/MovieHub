@@ -29,6 +29,13 @@ _STEP_ACTIONS = frozenset({
     CallbackAction.LANGUAGE_SELECT,
     CallbackAction.USE_ORIGINAL,
     CallbackAction.CUSTOM_INPUT,
+    CallbackAction.PREVIEW_EDIT,
+    CallbackAction.EDIT_TITLE,
+    CallbackAction.EDIT_YEAR,
+    CallbackAction.EDIT_POSTER,
+    CallbackAction.MANAGE_FILES,
+    CallbackAction.FILE_REMOVE,
+    CallbackAction.BACK_TO_PREVIEW,
 })
 
 _USER_ACTIONS = frozenset({
