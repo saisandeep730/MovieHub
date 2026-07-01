@@ -25,6 +25,8 @@ def _is_set(value: object) -> bool:
 def _field_summary(steps: list[WizardStep], context: WizardContext) -> str:
     lines: list[str] = []
     for s in steps:
+        if not s.field_name:
+            continue
         value = getattr(context, s.field_name, None)
         val_str = s.render_summary_value(context)
         display = val_str if val_str else s.title

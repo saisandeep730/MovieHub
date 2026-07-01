@@ -6,6 +6,9 @@ from logging import getLogger
 
 from pyrogram.types import InlineKeyboardMarkup, Message
 
+from app.core import CallbackAction
+from app.keyboards import Button, KeyboardBuilder
+
 from app.ui.icons import Icons
 from app.utils import normalize_title
 from app.wizard.core import WizardContext, WizardStep
@@ -199,3 +202,58 @@ class FilesStep(WizardStep):
             "File added (step %d): %s (%s)",
             len(context.files), file_name, _format_size(media.file_size or 0),
         )
+
+
+class PreviewStep(WizardStep):
+    title = ""
+    field_name = ""
+    optional = False
+    collects_multiple = False
+
+    def render_prompt(self, context: UploadContext) -> str:
+        poster_text = (
+            f"{Icons.SUCCESS} Uploaded"
+            if context.poster_file_id is not None
+            else f"{Icons.INFO} Skipped"
+        )
+        file_count = len(context.files)
+        total_size = sum(f["file_size"] for f in context.files)
+
+        lines: list[str] = [
+            f"{Icons.MOVIE} <b>Movie:</b> {context.title or 'N/A'}",
+            f"{Icons.CALENDAR} <b>Year:</b> {context.year or 'N/A'}",
+            f"{Icons.WALLPAPER} <b>Poster:</b> {poster_text}",
+            f"{Icons.FOLDER} <b>Files:</b> {file_count} ({_format_size(total_size)})",
+            "",
+        ]
+
+        for i, f in enumerate(context.files):
+            name = _truncate_name(f.get("file_name", ""), 40)
+            sz = _format_size(f.get("file_size", 0))
+            lines.append(f"{Icons.FILE} {name} ({sz})")
+
+        return "\n".join(lines)
+
+    def get_keyboard(
+        self,
+        has_back: bool = False,
+        has_skip: bool = False,
+        has_continue: bool = False,
+        context: WizardContext | None = None,
+    ) -> InlineKeyboardMarkup:
+        return (
+            KeyboardBuilder()
+            .row(
+                Button.action(f"{Icons.EDIT} Edit", CallbackAction.EDIT),
+                Button.action(f"{Icons.SAVE} Save Draft", CallbackAction.SAVE_DRAFT),
+            )
+            .button(f"{Icons.PUBLISH} Publish", CallbackAction.PUBLISH)
+            .button(f"{Icons.ERROR} Cancel", CallbackAction.CANCEL)
+            .build()
+        )
+
+    def validate(self, message: Message, context: UploadContext) -> str | None:
+        return "Please use the buttons below."
+
+    def process(self, message: Message, context: UploadContext) -> None:
+        pass

@@ -159,6 +159,18 @@ class WizardSession:
         await self.render_current(client)
         await callback.answer()
 
+    async def handle_edit(self, client: object, callback: CallbackQuery) -> None:
+        await callback.answer("Edit coming soon")
+        logger.debug("Edit requested for wizard %s by user %d", self.wizard_name, self.user_id)
+
+    async def handle_save_draft(self, client: object, callback: CallbackQuery) -> None:
+        await callback.answer("Save Draft coming soon")
+        logger.debug("Save Draft requested for wizard %s by user %d", self.wizard_name, self.user_id)
+
+    async def handle_publish(self, client: object, callback: CallbackQuery) -> None:
+        await callback.answer("Publish coming soon")
+        logger.debug("Publish requested for wizard %s by user %d", self.wizard_name, self.user_id)
+
     async def handle_cancel(self, client: object, callback: CallbackQuery) -> None:
         state_manager.clear_state(self.user_id, self.chat_id)
         from app.ui.keyboards import admin_dashboard_keyboard

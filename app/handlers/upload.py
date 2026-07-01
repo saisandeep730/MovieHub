@@ -5,7 +5,7 @@ from pyrogram.types import CallbackQuery, Message
 
 from app.core.container import container
 from app.wizard import wizard_manager
-from app.wizard.upload import FilesStep, PosterStep, TitleStep, UploadContext, YearStep
+from app.wizard.upload import FilesStep, PosterStep, PreviewStep, TitleStep, UploadContext, YearStep
 
 logger = getLogger(__name__)
 
@@ -37,7 +37,7 @@ async def start_upload_wizard(client: object, callback_query: CallbackQuery) -> 
         user_id=user_id,
         chat_id=callback_query.message.chat.id,
         wizard_name=WIZARD_NAME,
-        steps=[TitleStep(), YearStep(), PosterStep(), FilesStep()],
+        steps=[TitleStep(), YearStep(), PosterStep(), FilesStep(), PreviewStep()],
         context_factory=UploadContext,
         title=WIZARD_TITLE,
     )

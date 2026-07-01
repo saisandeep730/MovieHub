@@ -74,6 +74,27 @@ async def handle_callback(client: object, callback_query: object) -> None:
                 await wizard.handle_back(client, callback_query)
             else:
                 await callback_query.answer()
+        elif action == CallbackAction.EDIT:
+            user_id = callback_query.from_user.id
+            wizard = wizard_manager.get_active(user_id)
+            if wizard:
+                await wizard.handle_edit(client, callback_query)
+            else:
+                await callback_query.answer()
+        elif action == CallbackAction.SAVE_DRAFT:
+            user_id = callback_query.from_user.id
+            wizard = wizard_manager.get_active(user_id)
+            if wizard:
+                await wizard.handle_save_draft(client, callback_query)
+            else:
+                await callback_query.answer()
+        elif action == CallbackAction.PUBLISH:
+            user_id = callback_query.from_user.id
+            wizard = wizard_manager.get_active(user_id)
+            if wizard:
+                await wizard.handle_publish(client, callback_query)
+            else:
+                await callback_query.answer()
         elif action == CallbackAction.CANCEL:
             user_id = callback_query.from_user.id
             wizard = wizard_manager.get_active(user_id)

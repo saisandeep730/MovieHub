@@ -37,6 +37,9 @@ class CallbackAction(str, Enum):
     SKIP = "sk"
     WIZARD_BACK = "wb"
     CONTINUE = "cn"
+    EDIT = "ed"
+    SAVE_DRAFT = "sd"
+    PUBLISH = "pb"
 
 
 def encode(action: CallbackAction, *args: str | int) -> str:
