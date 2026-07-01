@@ -204,6 +204,20 @@ def upload_poster_prompt(title: str) -> str:
     )
 
 
+def upload_poster_success() -> str:
+    return (
+        f"{Icons.SUCCESS} <b>Poster saved.</b>\n\n"
+        f"{Icons.FOLDER} Now forward all movie files together."
+    )
+
+
+def upload_poster_invalid() -> str:
+    return (
+        f"{Icons.WARNING} <b>Invalid input.</b>\n\n"
+        f"Please send a <b>photo</b> to use as the movie poster."
+    )
+
+
 def upload_files_prompt() -> str:
     return (
         f"{Icons.FOLDER} Now forward all movie files together.\n\n"

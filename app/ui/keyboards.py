@@ -8,12 +8,18 @@ from app.ui.icons import Icons
 def home_keyboard() -> InlineKeyboardMarkup:
     return (
         KeyboardBuilder()
-        .button(f"{Icons.SEARCH} Search Movie", CallbackAction.SEARCH)
-        .button(f"{Icons.LATEST} Latest Movies", CallbackAction.LATEST)
-        .button(f"{Icons.REQUEST} Request Movie", CallbackAction.REQUEST_MOVIE)
-        .button(f"{Icons.UPDATES} Updates Channel", CallbackAction.UPDATES)
-        .button(f"{Icons.CONTACT} Contact Admin", CallbackAction.CONTACT)
-        .button(f"{Icons.ABOUT} About", CallbackAction.ABOUT)
+        .row(
+            Button.action(f"{Icons.SEARCH} Search Movie", CallbackAction.SEARCH),
+            Button.action(f"{Icons.LATEST} Latest Movies", CallbackAction.LATEST),
+        )
+        .row(
+            Button.action(f"{Icons.REQUEST} Request Movie", CallbackAction.REQUEST_MOVIE),
+            Button.action(f"{Icons.UPDATES} Updates", CallbackAction.UPDATES),
+        )
+        .row(
+            Button.action(f"{Icons.CONTACT} Contact Admin", CallbackAction.CONTACT),
+            Button.action(f"{Icons.ABOUT} About", CallbackAction.ABOUT),
+        )
         .build()
     )
 
@@ -21,14 +27,22 @@ def home_keyboard() -> InlineKeyboardMarkup:
 def admin_dashboard_keyboard() -> InlineKeyboardMarkup:
     return (
         KeyboardBuilder()
-        .button(f"{Icons.UPLOAD} Upload Movie", CallbackAction.ADMIN_UPLOAD)
-        .button(f"{Icons.MANAGE} Manage Movies", CallbackAction.ADMIN_MANAGE)
-        .button(f"{Icons.REQUEST} Movie Requests", CallbackAction.ADMIN_REQUESTS)
-        .button(f"{Icons.BROADCAST} Broadcast", CallbackAction.ADMIN_BROADCAST)
-        .button(f"{Icons.USERS} Users", CallbackAction.ADMIN_USERS)
-        .button(f"{Icons.STATS} Statistics", CallbackAction.ADMIN_STATS)
-        .button(f"{Icons.SETTINGS} Settings", CallbackAction.ADMIN_SETTINGS)
-        .button(f"{Icons.BACKUP} Backup", CallbackAction.ADMIN_BACKUP)
+        .row(
+            Button.action(f"{Icons.UPLOAD} Upload Movie", CallbackAction.ADMIN_UPLOAD),
+            Button.action(f"{Icons.MANAGE} Manage Movies", CallbackAction.ADMIN_MANAGE),
+        )
+        .row(
+            Button.action(f"{Icons.REQUEST} Requests", CallbackAction.ADMIN_REQUESTS),
+            Button.action(f"{Icons.BROADCAST} Broadcast", CallbackAction.ADMIN_BROADCAST),
+        )
+        .row(
+            Button.action(f"{Icons.USERS} Users", CallbackAction.ADMIN_USERS),
+            Button.action(f"{Icons.STATS} Statistics", CallbackAction.ADMIN_STATS),
+        )
+        .row(
+            Button.action(f"{Icons.SETTINGS} Settings", CallbackAction.ADMIN_SETTINGS),
+            Button.action(f"{Icons.BACKUP} Backup", CallbackAction.ADMIN_BACKUP),
+        )
         .button(f"{Icons.HEALTH} Health Dashboard", CallbackAction.ADMIN_HEALTH)
         .build()
     )
@@ -37,7 +51,10 @@ def admin_dashboard_keyboard() -> InlineKeyboardMarkup:
 def back_keyboard(action: CallbackAction = CallbackAction.HOME) -> InlineKeyboardMarkup:
     return (
         KeyboardBuilder()
-        .button(f"{Icons.BACK} Back", action)
+        .row(
+            Button.action(f"{Icons.BACK} Back", action),
+            Button.action(f"{Icons.HOME} Home", CallbackAction.HOME),
+        )
         .build()
     )
 
@@ -53,8 +70,10 @@ def cancel_keyboard() -> InlineKeyboardMarkup:
 def poster_keyboard() -> InlineKeyboardMarkup:
     return (
         KeyboardBuilder()
-        .button(f"{Icons.SKIP} Skip", CallbackAction.SKIP)
-        .button(f"{Icons.ERROR} Cancel", CallbackAction.CANCEL)
+        .row(
+            Button.action(f"{Icons.SKIP} Skip", CallbackAction.SKIP),
+            Button.action(f"{Icons.ERROR} Cancel", CallbackAction.CANCEL),
+        )
         .build()
     )
 
