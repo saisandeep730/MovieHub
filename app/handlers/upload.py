@@ -4,6 +4,7 @@ from pyrogram import filters
 from pyrogram.types import CallbackQuery, Message
 
 from app.core.container import container
+from app.utils.filename_types import ParsedFile
 from app.wizard import wizard_manager
 from app.wizard.upload import FilesStep, PosterStep, PreviewStep, TitleStep, UploadContext, YearStep
 

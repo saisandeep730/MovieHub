@@ -40,6 +40,11 @@ class CallbackAction(str, Enum):
     EDIT = "ed"
     SAVE_DRAFT = "sd"
     PUBLISH = "pb"
+    FILE_SELECT = "fs"
+    QUALITY_SELECT = "qs"
+    LANGUAGE_SELECT = "ls"
+    USE_ORIGINAL = "uo"
+    CUSTOM_INPUT = "ci"
 
 
 def encode(action: CallbackAction, *args: str | int) -> str:

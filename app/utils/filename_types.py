@@ -14,7 +14,9 @@ class ParsedFile:
     episode_end: str | None = None
     missing_quality: bool = False
     missing_language: bool = False
+    use_original_filename: bool = False
     file_size: int = 0
     mime_type: str | None = None
+    use_original_filename: bool = False
     file_id: str | None = None
     file_unique_id: str | None = None

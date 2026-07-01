@@ -86,7 +86,7 @@ MULTI_AUDIO_PATTERNS: list[re.Pattern[str]] = [
 ]
 
 SEASON_PATTERNS: list[re.Pattern[str]] = [
-    re.compile(r"\b[Ss](\d{1,2})\s*[Ee][Pp]\s*(\d{1,2})(?:\s*\u2013\s*(\d{1,2})|\s*-\s*(\d{1,2}))?\b"),
-    re.compile(r"\b[Ss](\d{1,2})[Ee](\d{1,2})\b"),
-    re.compile(r"\b[Ss]eason\s*(\d{1,2})\s*[Ee]pisode\s*(\d{1,2})\b"),
+    re.compile(r"\b[Ss](\d{1,2})\s*[Ee][Pp]\s*(\d{1,3})(?:\s*\u2013\s*(\d{1,3})|\s*-\s*(\d{1,3}))?\b"),
+    re.compile(r"\b[Ss](\d{1,2})[Ee](\d{1,3})\b"),
+    re.compile(r"\b[Ss]eason\s*(\d{1,2})\s*[Ee]pisode\s*(\d{1,3})\b"),
 ]

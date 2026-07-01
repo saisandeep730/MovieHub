@@ -23,6 +23,14 @@ _ADMIN_ACTIONS = frozenset({
     CallbackAction.ADMIN_HEALTH,
 })
 
+_STEP_ACTIONS = frozenset({
+    CallbackAction.FILE_SELECT,
+    CallbackAction.QUALITY_SELECT,
+    CallbackAction.LANGUAGE_SELECT,
+    CallbackAction.USE_ORIGINAL,
+    CallbackAction.CUSTOM_INPUT,
+})
+
 _USER_ACTIONS = frozenset({
     CallbackAction.SEARCH,
     CallbackAction.LATEST,
@@ -93,6 +101,13 @@ async def handle_callback(client: object, callback_query: object) -> None:
             wizard = wizard_manager.get_active(user_id)
             if wizard:
                 await wizard.handle_publish(client, callback_query)
+            else:
+                await callback_query.answer()
+        elif action in _STEP_ACTIONS:
+            user_id = callback_query.from_user.id
+            wizard = wizard_manager.get_active(user_id)
+            if wizard:
+                await wizard.handle_step_callback(client, callback_query, action, args)
             else:
                 await callback_query.answer()
         elif action == CallbackAction.CANCEL:

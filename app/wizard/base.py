@@ -151,6 +151,12 @@ class WizardSession:
                 await callback.answer()
                 return
 
+        msg = self.current.on_continue(self.context)
+        if msg is not None:
+            await self.render_current(client, error=msg if msg else None)
+            await callback.answer()
+            return
+
         if self.is_last_step:
             await self._complete(client)
             return
@@ -158,6 +164,18 @@ class WizardSession:
         self.current_step += 1
         await self.render_current(client)
         await callback.answer()
+
+    async def handle_step_callback(
+        self, client: object, callback: CallbackQuery, action: object, args: list[str]
+    ) -> None:
+        handler = getattr(self.current, 'handle_callback', None)
+        if handler:
+            await handler(client, callback, action, args, self.context)
+            self._persist()
+            await self.render_current(client)
+            await callback.answer()
+        else:
+            await callback.answer("Unknown action")
 
     async def handle_edit(self, client: object, callback: CallbackQuery) -> None:
         await callback.answer("Edit coming soon")

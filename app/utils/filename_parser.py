@@ -106,13 +106,31 @@ def _build_display_name(
     language_label: str,
     season: str | None,
     episode: str | None,
+    episode_end: str | None = None,
 ) -> str:
     parts: list[str] = []
     if season is not None and episode is not None:
-        parts.append(f"S{season}E{episode}")
+        if episode_end:
+            parts.append(f"S{season} \u2022 EP{episode}\u2013{episode_end}")
+        else:
+            parts.append(f"S{season}E{episode}")
     parts.append(quality if quality else "\U0001F937")
     parts.append(language_label if language_label else "\U0001F937")
     return f'\U0001F3AC {" \u2022 ".join(parts)}'
+
+
+def build_language_label(individual: list[str], audio_marker: str | None) -> str:
+    return _build_language_label(individual, audio_marker)
+
+
+def build_display_name(
+    quality: str | None,
+    language_label: str,
+    season: str | None,
+    episode: str | None,
+    episode_end: str | None = None,
+) -> str:
+    return _build_display_name(quality, language_label, season, episode, episode_end)
 
 
 def parse_filename(filename: str) -> ParsedFile:
@@ -133,7 +151,7 @@ def parse_filename(filename: str) -> ParsedFile:
     language_label = _build_language_label(individual_languages, audio_marker)
     missing_language = not language_label
 
-    display_name = _build_display_name(quality, language_label, season, episode)
+    display_name = _build_display_name(quality, language_label, season, episode, episode_end)
 
     result_languages: list[str]
     if audio_marker:

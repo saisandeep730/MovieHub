@@ -49,3 +49,8 @@ class WizardStep(ABC):
 
     def on_skip(self, context: WizardContext) -> None:
         pass
+
+    def on_continue(self, context: WizardContext) -> str | None:
+        """Return None to advance. Return '' to stay silently.
+        Return a non-empty string to stay and show that error."""
+        return None
